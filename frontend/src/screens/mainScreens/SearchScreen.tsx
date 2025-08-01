@@ -1,10 +1,26 @@
 // src/screens/SearchScreen.tsx
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { COLORS, FONTS } from '../../../constants/theme';
+
 export default function SearchScreen() {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Search Screen</Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Search Screen</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.DARK_BG,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    color: COLORS.PRIMARY_TEXT,
+    fontFamily: FONTS.DEFAULT,
+    fontSize: 18,
+  },
+});

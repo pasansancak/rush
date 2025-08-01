@@ -7,7 +7,7 @@ import ProfileScreen from '../screens/mainScreens/ProfileScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
-
+import { COLORS } from '../../constants/theme'; // 🔥 colors from theme
 
 const Tab = createBottomTabNavigator();
 
@@ -19,8 +19,12 @@ export default function MainTabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: "#D6FF00",
-        tabBarInactiveTintColor: "#aaa",
+        tabBarActiveTintColor: COLORS.PRIMARY_TEXT,          // #F2F2F2
+        tabBarInactiveTintColor: COLORS.SECONDARY_TEXT,      // #6C6C6C
+        tabBarStyle: {
+          backgroundColor: COLORS.DARK_BG,                   // #181818
+          borderTopWidth: 0, // Optional: remove top border for cleaner look
+        },
         tabBarIcon: ({ color, size }) => {
           let iconName = '';
           if (route.name === 'Home') iconName = 'home-outline';
@@ -28,7 +32,7 @@ export default function MainTabNavigator() {
           else if (route.name === 'QR') iconName = 'qrcode-scan';
           else if (route.name === 'Profile') iconName = 'account-circle-outline';
           return <MaterialCommunityIcons name={iconName as any} size={28} color={color} />;
-        }
+        },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
@@ -39,7 +43,7 @@ export default function MainTabNavigator() {
         listeners={{
           tabPress: (e) => {
             if (!isLoggedIn) {
-              e.preventDefault(); // Tab'a geçişi engelle
+              e.preventDefault();
               navigation.navigate('Login', { redirectTo: 'QR' });
             }
           },
