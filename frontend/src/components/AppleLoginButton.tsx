@@ -10,7 +10,15 @@ export default function AppleLoginButton({ onSuccess }: { onSuccess?: (jwt: stri
       buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
       buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
       cornerRadius={8}
-      style={{ width: 260, height: 44, marginVertical: 10 }}
+      style={{ width: 300,
+        height: 40,
+        marginVertical: 10,
+        borderRadius: 8,
+        paddingVertical: 15,
+        alignItems: "center",
+        marginTop: 2,
+        marginBottom: 10,
+      }}
       onPress={async () => {
         try {
           // Burada kimlik doğrulama mantığı olacak

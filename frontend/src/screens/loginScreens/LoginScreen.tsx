@@ -63,6 +63,10 @@ export default function LoginScreen({ navigation }) {
           <Text style={styles.buttonText}>Giriş Yap</Text>
         </TouchableOpacity>
 
+        <Text style={{ color: COLORS.SECONDARY_TEXT, marginBottom: 10, marginTop: 10 }}>
+          veya 
+        </Text>
+
         <View style={{ marginTop: 0, alignContent: "center" }}>
           <GoogleLoginButton onSuccess={() => {}} />
           <AppleLoginButton onSuccess={() => {}} />
@@ -146,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     marginTop: 2,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   buttonText: {
     color: COLORS.PRIMARY_TEXT,

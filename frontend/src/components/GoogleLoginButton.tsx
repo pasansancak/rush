@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Alert } from "react-native";
-import { GoogleSignin, statusCodes, GoogleSigninButton, isSuccessResponse } from "@react-native-google-signin/google-signin";
+import { Alert, TouchableOpacity, Text, StyleSheet, View, ActivityIndicator, Image } from "react-native";
+import { GoogleSignin, statusCodes, isSuccessResponse } from "@react-native-google-signin/google-signin";
 import { loginWithGoogleBackend } from "../api/auth";
 import { Platform } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { COLORS, FONTS } from "../../constants/theme";
 
-export default function GoogleLoginButton({ onSuccess }) {
+export default function CustomGoogleLoginButton({ onSuccess }) {
   const [isInProgress, setIsInProgress] = useState(false);
 
   useEffect(() => {
     GoogleSignin.configure({
       iosClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_IOS,
       webClientId: process.env.EXPO_PUBLIC_GOOGLE_CLIENT_ID_WEB,
-      forceCodeForRefreshToken: true, 
+      forceCodeForRefreshToken: true,
     });
   }, []);
 
@@ -24,23 +25,16 @@ export default function GoogleLoginButton({ onSuccess }) {
       if (isSuccessResponse(response)) {
         const { idToken } = response.data;
         const clientType = Platform.OS;
-        try {
-          const backendRes = await loginWithGoogleBackend(idToken, clientType);
-          onSuccess(backendRes.access_token);
-        } catch (e) {
-          Alert.alert("Backend Hatası", "Sunucu ile iletişim başarısız.");
-        }
+        const backendRes = await loginWithGoogleBackend(idToken, clientType);
+        onSuccess(backendRes.access_token);
       } else {
         Alert.alert("Giriş Hatası", "Google kimlik doğrulama başarısız oldu.");
       }
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-        Alert.alert("Giriş işlemi zaten devam ediyor.");
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        Alert.alert("Google Play Servisleri mevcut değil.");
+        // Kullanıcı işlemi iptal etti
       } else {
-        Alert.alert("Giriş Hatası", error.message || "Bilinmeyen bir hata oluştu.");
+        Alert.alert("Hata", error.message || "Bir hata oluştu.");
       }
     } finally {
       setIsInProgress(false);
@@ -48,12 +42,45 @@ export default function GoogleLoginButton({ onSuccess }) {
   };
 
   return (
-    <GoogleSigninButton
-      style={{ width: 240, height: 48 }}
-      size={GoogleSigninButton.Size.Wide}
-      color={GoogleSigninButton.Color.Dark}
+    <TouchableOpacity
+      style={styles.button}
       onPress={handleGoogleSignIn}
       disabled={isInProgress}
-    />
+    >
+      {isInProgress ? (
+        <ActivityIndicator color={COLORS.PRIMARY_TEXT} />
+      ) : (
+        <>
+          <Image
+            source={require("../assets/google.png")} // PNG ikonunu projene eklemelisin
+            style={styles.icon}
+          />
+          <Text style={styles.text}>Google ile Giriş Yap</Text>
+        </>
+      )}
+    </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginVertical: 10,
+    justifyContent: "center",
+  },
+  text: {
+    color: "#000",
+    fontSize: 14,
+    fontFamily: FONTS.DEFAULT,
+    marginLeft: 10,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+});
