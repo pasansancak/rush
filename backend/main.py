@@ -15,6 +15,3 @@ def read_root():
     return {"message": "Rush API is working!"}
 
 Base.metadata.create_all(bind=engine)
-
-# Şimdilik temel bir endpoint var. 
-# Sonraki adımda database bağlantısı ve model dosyalarını hazırlayacağız.
