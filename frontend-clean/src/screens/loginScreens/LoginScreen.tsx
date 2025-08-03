@@ -12,12 +12,15 @@ import AppleLoginButton from "../../components/AppleLoginButton";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, FONTS, FONT_SIZES } from "../../../constants/theme";
 import * as SecureStore from 'expo-secure-store';
+import { useAuth } from "../../context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
 
+  const { login } = useAuth();
+
   const handleLoginSuccess = async (jwt: string) => {
-    await SecureStore.setItemAsync("jwt", jwt);
+    await login(jwt); // Hem SecureStore'a kaydeder hem context'te günceller
   };
 
   return (
@@ -61,9 +64,7 @@ export default function LoginScreen({ navigation }) {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            // Şimdilik işlevsiz
-          }}
+          onPress={() => {handleLoginSuccess}}
         >
           <Text style={styles.buttonText}>Giriş Yap</Text>
         </TouchableOpacity>

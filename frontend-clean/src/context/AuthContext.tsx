@@ -1,30 +1,47 @@
-// src/context/AuthContext.tsx
-// Kullanıcı Giriş yapılma bilgisinin tutulduğu ve yönetildiği context
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import * as SecureStore from 'expo-secure-store';
 
-interface AuthContextProps {
+type AuthContextType = {
   isLoggedIn: boolean;
-  login: () => void;
-  logout: () => void;
-}
+  jwt: string | null;
+  login: (jwt: string) => Promise<void>;
+  logout: () => Promise<void>;
+};
 
-const AuthContext = createContext<AuthContextProps>({
+const AuthContext = createContext<AuthContextType>({
   isLoggedIn: false,
-  login: () => {},
-  logout: () => {},
+  jwt: null,
+  login: async () => {},
+  logout: async () => {},
 });
 
-export const useAuth = () => useContext(AuthContext);
+export function AuthProvider({ children }) {
+  const [jwt, setJwt] = useState<string | null>(null);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    // App açıldığında SecureStore'dan token oku
+    (async () => {
+      const storedJwt = await SecureStore.getItemAsync("jwt");
+      if (storedJwt) setJwt(storedJwt);
+    })();
+  }, []);
 
-  const login = () => setIsLoggedIn(true);
-  const logout = () => setIsLoggedIn(false);
+  const login = async (token: string) => {
+    await SecureStore.setItemAsync("jwt", token);
+    setJwt(token);
+  };
+
+  const logout = async () => {
+    await SecureStore.deleteItemAsync("jwt");
+    setJwt(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn: !!jwt, jwt, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+// Hook olarak kullanmak için
+export const useAuth = () => useContext(AuthContext);

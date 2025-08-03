@@ -1,11 +1,23 @@
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 from dotenv import load_dotenv
 
+# .env dosyasını yükle
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Artık burada .env'deki DATABASE_URL okur
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres@localhost/rush")
+print("DATABASE_URL:", DATABASE_URL)   # Bunu bir kez gör, doğru mu bak
 
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
