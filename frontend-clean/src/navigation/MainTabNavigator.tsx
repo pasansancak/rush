@@ -6,24 +6,29 @@ import QRScreen from '../screens/mainScreens/QRScreen';
 import ProfileScreen from '../screens/mainScreens/ProfileScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
-import { useNavigation } from '@react-navigation/native';
-import { COLORS } from '../../constants/theme'; // 🔥 colors from theme
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { COLORS } from '../constants/theme';
 
 const Tab = createBottomTabNavigator();
 
 export default function MainTabNavigator() {
   const { isLoggedIn } = useAuth();
   const navigation = useNavigation();
+  const route = useRoute();
+
+  // Parametreyle tab yönlendirmesi (ör: Login'den sonra Profile'a gitmek için)
+  const initialRoute = route.params?.screen || 'Home';
 
   return (
     <Tab.Navigator
+      initialRouteName={initialRoute}
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarActiveTintColor: COLORS.PRIMARY_TEXT,          // #F2F2F2
-        tabBarInactiveTintColor: COLORS.SECONDARY_TEXT,      // #6C6C6C
+        tabBarActiveTintColor: COLORS.PRIMARY_TEXT,
+        tabBarInactiveTintColor: COLORS.SECONDARY_TEXT,
         tabBarStyle: {
-          backgroundColor: COLORS.DARK_BG,                   // #181818
-          borderTopWidth: 0, // Optional: remove top border for cleaner look
+          backgroundColor: COLORS.DARK_BG,
+          borderTopWidth: 0,
         },
         tabBarIcon: ({ color, size }) => {
           let iconName = '';

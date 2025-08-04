@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from api.auth import router as auth_router
+from api.userFetch import router as user_router
 
 from dotenv import load_dotenv
 
@@ -11,6 +12,7 @@ import os
 load_dotenv()
 
 app = FastAPI()
+app.include_router(user_router)
 app.include_router(auth_router)
 
 @app.get("/")

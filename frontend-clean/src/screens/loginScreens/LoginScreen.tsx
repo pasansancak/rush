@@ -10,17 +10,28 @@ import {
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import AppleLoginButton from "../../components/AppleLoginButton";
 import { Ionicons } from "@expo/vector-icons";
-import { COLORS, FONTS, FONT_SIZES } from "../../../constants/theme";
-import * as SecureStore from 'expo-secure-store';
+import { COLORS, FONTS, FONT_SIZES } from "../../constants/theme";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigation = useNavigation();
+  const route = useRoute();
 
   const { login } = useAuth();
 
-  const handleLoginSuccess = async (jwt: string) => {
+  // JWT ile login sonrası
+  const handleLoginSuccess = async (jwt:string) => {
     await login(jwt); // Hem SecureStore'a kaydeder hem context'te günceller
+
+    const redirectTo = (route.params as { redirectTo?: string })?.redirectTo;
+    if (redirectTo) {
+      (navigation as any).replace("MainTab", { screen: redirectTo });
+    } else {
+      (navigation as any).replace("MainTab");
+    }
   };
 
   return (

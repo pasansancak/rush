@@ -5,6 +5,7 @@ import { AuthProvider } from './src/context/AuthContext';
 import RootNavigator from './src/navigation/RootNavigator';
 import { useFonts } from 'expo-font';
 import { View, ActivityIndicator } from 'react-native';
+import { UserProvider } from './src/context/UserContext';
 
 export default function App() {
 
@@ -24,9 +25,11 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <NavigationContainer>
-        <RootNavigator />
-      </NavigationContainer>
+      <UserProvider>
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      </UserProvider>
     </AuthProvider>
   );
 }

@@ -9,7 +9,11 @@ export default function RootNavigator() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MainTab" component={MainTabNavigator} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{ presentation: 'modal' }} />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{ presentation: 'modal' }}
+      />
     </Stack.Navigator>
   );
 }

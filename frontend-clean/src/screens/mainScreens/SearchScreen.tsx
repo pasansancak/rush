@@ -1,7 +1,7 @@
 // src/screens/SearchScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS, FONTS } from '../../../constants/theme';
+import { COLORS, FONTS } from '../../constants/theme';
 
 export default function SearchScreen() {
   return (

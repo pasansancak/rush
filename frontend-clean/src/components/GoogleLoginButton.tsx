@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, Image, Alert, Platform } from "react-native";
 import * as Google from "expo-auth-session/providers/google";
 import { loginWithGoogleBackend } from "../api/auth"; // Kendi backend fonksiyonun!
-import { COLORS, FONTS } from "../../constants/theme";
+import { COLORS, FONTS } from "../constants/theme";
 
 export default function CustomGoogleLoginButton({ onSuccess }) {
   const [request, response, promptAsync] = Google.useAuthRequest({
