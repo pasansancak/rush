@@ -15,9 +15,9 @@ export default function ProfileScreen() {
 
   if (!user) {
     return (
-      <SafeAreaView style={[styles.safe, { justifyContent: "center" }]}>
-        <Text style={styles.loadingText}>Yükleniyor...</Text>
-      </SafeAreaView>
+      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+        <Text style={styles.logoutText}>Çıkış Yap</Text>
+      </TouchableOpacity>
     );
   }
 
@@ -62,7 +62,6 @@ export default function ProfileScreen() {
         </Text>
       </View>
 
-      {/* Çıkış */}
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
         <Text style={styles.logoutText}>Çıkış Yap</Text>
       </TouchableOpacity>

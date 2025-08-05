@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from api.auth import router as auth_router
+from api.authGoogle import router as google_auth_router
+from api.authApple import router as apple_auth_router
 from api.userFetch import router as user_router
 
 from dotenv import load_dotenv
@@ -13,7 +14,8 @@ load_dotenv()
 
 app = FastAPI()
 app.include_router(user_router)
-app.include_router(auth_router)
+app.include_router(google_auth_router)
+app.include_router(apple_auth_router)
 
 @app.get("/")
 def read_root():

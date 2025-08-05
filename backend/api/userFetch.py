@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from core.database import get_db
 from models.user import User
-from api.auth import get_current_user  # get_current_user fonksiyonun api/auth.py'da olmalı
+from api.authGoogle import get_current_user
 
 router = APIRouter(
     prefix="/api/user",
@@ -11,7 +11,6 @@ router = APIRouter(
 
 @router.get("/me")
 def get_my_user(current_user: User = Depends(get_current_user)):
-    # Kullanıcı JWT ile doğrulandı ve DB'den bulundu, user objesi olarak döndürülür.
     return {
         "id": current_user.id,
         "name": current_user.name,
