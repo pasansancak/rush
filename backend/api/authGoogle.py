@@ -69,7 +69,9 @@ def google_login(data: GoogleLoginRequest, db: Session = Depends(get_db)):
             gender=gender,
             is_active=True,
             is_verified=True,
-            last_login_at=datetime.utcnow()
+            last_login_at=datetime.utcnow(),
+            provider="google",  # <-- BUNU EKLE
+            google_sub=idinfo.get("sub"),  # Google unique sub
         )
         db.add(user)
         db.commit()

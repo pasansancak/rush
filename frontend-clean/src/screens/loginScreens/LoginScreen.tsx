@@ -36,7 +36,10 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
+      <View style={styles.handleBarContainer}>
+                <Ionicons name="chevron-down" size={32} color={COLORS.SECONDARY_TEXT} />
+              </View>
+        <View style={styles.container}>
         <Text style={styles.logo}>RUSH</Text>
         <Text style={styles.title}>Giriş Yap</Text>
         <Text style={styles.subtitle}>
@@ -91,7 +94,7 @@ export default function LoginScreen() {
 
         <View style={styles.signupRow}>
           <Text style={styles.signupText}>Hesabın yok mu? </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Register')}>
             <Text style={styles.signupLink}>Kayıt Ol</Text>
           </TouchableOpacity>
         </View>
@@ -110,6 +113,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 32,
+  },
+  handleBarContainer: {
+    alignItems: "center",
+    marginTop: 6,
+    minHeight: 32,
+    justifyContent: "center",
   },
   logo: {
     fontSize: FONT_SIZES.logo,

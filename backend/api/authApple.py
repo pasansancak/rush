@@ -71,16 +71,18 @@ def apple_login(data: AppleLoginRequest, db: Session = Depends(get_db)):
     if not user:
         # Apple kullanıcı adı ve email'i sadece ilk seferde alabiliyorsun
         user = User(
-            name=name,
-            email=email if email else f"{apple_sub}@appleid.apple.com",
-            phone="0000000000",
-            birthday=datetime(1970, 1, 1).date(),
-            created_at=datetime.utcnow(),
-            is_active=True,
-            is_verified=True,
-            last_login_at=datetime.utcnow(),
-            apple_sub=apple_sub  # Modelde bir apple_sub alanı varsa!
-        )
+        name=name,
+        email=email if email else f"{apple_sub}@appleid.apple.com",
+        phone="0000000000",
+        birthday=datetime(1970, 1, 1).date(),
+        created_at=datetime.utcnow(),
+        is_active=True,
+        is_verified=True,
+        last_login_at=datetime.utcnow(),
+        apple_sub=apple_sub,          # Apple login için unique sub
+        provider="apple"
+    )
+
         db.add(user)
         db.commit()
         db.refresh(user)
