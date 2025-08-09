@@ -1,16 +1,14 @@
 from fastapi import FastAPI
+from dotenv import load_dotenv
+from core.database import Base, engine
+
+import models  # <-- models/__init__.py tüm sınıfları import ediyor
+
 from api.authGoogle import router as google_auth_router
 from api.authApple import router as apple_auth_router
 from api.userFetch import router as user_router
 from api.authEmail import router as auth_email_router
 from api.registerEmail import router as register_email_router
-
-from dotenv import load_dotenv
-
-from models.user import Base
-from core.database import engine
-
-import os
 
 load_dotenv()
 
