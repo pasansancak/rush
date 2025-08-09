@@ -5,15 +5,10 @@ from jose import jwt
 import os
 from datetime import datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from models.user import User
 from core.database import get_db
-
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from jose import jwt, JWTError
-from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -81,11 +76,12 @@ def google_login(data: GoogleLoginRequest, db: Session = Depends(get_db)):
         user.last_login_at = datetime.utcnow()
         db.commit()
 
-    # Kendi JWT token'ını üret
-    expire = datetime.utcnow() + timedelta(days=90)
+    expire = datetime.utcnow() + timedelta(minutes=300000)
     token_data = {
-        "sub": user.email,
-        "exp": int(expire.timestamp())
+        "sub": str(user.id),       
+        "email": user.email,   
+        "exp": int(expire.timestamp()),
+        "iat": int(datetime.utcnow().timestamp())
     }
     access_token = jwt.encode(token_data, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
 
@@ -102,26 +98,3 @@ def google_login(data: GoogleLoginRequest, db: Session = Depends(get_db)):
             "created_at": user.created_at.isoformat() if user.created_at else None,
         }
     }
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/google-login")  # tokenUrl önemli değil, Google login için
-
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-    JWT_ALGORITHM = "HS256"
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Kimlik doğrulama başarısız.",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-
-    user = db.query(User).filter(User.email == email).first()
-    if user is None:
-        raise credentials_exception
-    return user

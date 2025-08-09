@@ -12,6 +12,12 @@ export async function loginWithAppleBackend(identityToken: string, clientType: s
   return response.data;
 }
 
+export async function loginWithEmailBackend(email: string, password: string) {
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL + "/auth/login";
+  const response = await axios.post(apiUrl, { email, password });
+  return response.data;
+}
+
 export async function registerWithEmailBackend({
   name,
   email,

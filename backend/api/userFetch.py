@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
-from core.database import get_db
+from fastapi import APIRouter, Depends
 from models.user import User
-from api.authGoogle import get_current_user
+from core.auth import get_current_user
 
 router = APIRouter(
     prefix="/api/user",

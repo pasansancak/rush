@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import GoogleLoginButton from "../../components/GoogleLoginButton";
 import AppleLoginButton from "../../components/AppleLoginButton";
+import LoginButton from "../../components/LoginButton";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS, FONTS, FONT_SIZES } from "../../constants/theme";
 import { useAuth } from "../../context/AuthContext";
@@ -16,16 +17,16 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
   const route = useRoute();
 
   const { login } = useAuth();
 
-  // JWT ile login sonrası
-  const handleLoginSuccess = async (jwt:string) => {
-    await login(jwt); // Hem SecureStore'a kaydeder hem context'te günceller
-
+  const handleLoginSuccess = async (jwt: string) => {
+    await login(jwt);
     const redirectTo = (route.params as { redirectTo?: string })?.redirectTo;
     if (redirectTo) {
       (navigation as any).replace("MainTab", { screen: redirectTo });
@@ -51,6 +52,9 @@ export default function LoginScreen() {
           placeholder="E-posta"
           placeholderTextColor={COLORS.SECONDARY_TEXT}
           keyboardType="email-address"
+          autoCapitalize="none"
+          value={email}
+          onChangeText={setEmail}
         />
 
         <View style={styles.inputRow}>
@@ -59,6 +63,8 @@ export default function LoginScreen() {
             placeholder="Şifre"
             placeholderTextColor={COLORS.SECONDARY_TEXT}
             secureTextEntry={!showPassword}
+            value={password}
+            onChangeText={setPassword}
           />
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
@@ -76,12 +82,11 @@ export default function LoginScreen() {
           <Text style={styles.forgotText}>Şifremi Unuttum</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {handleLoginSuccess}}
-        >
-          <Text style={styles.buttonText}>Giriş Yap</Text>
-        </TouchableOpacity>
+        <LoginButton
+          email={email}
+          password={password}
+          onSuccess={handleLoginSuccess}
+        />
 
         <Text style={{ color: COLORS.SECONDARY_TEXT, marginBottom: 10, marginTop: 10 }}>
           veya 
@@ -167,20 +172,6 @@ const styles = StyleSheet.create({
   forgotText: {
     color: COLORS.RUSH_RED,
     fontSize: FONT_SIZES.small,
-    fontFamily: FONTS.DEFAULT,
-  },
-  button: {
-    backgroundColor: COLORS.RUSH_RED,
-    borderRadius: 8,
-    paddingVertical: 14,
-    alignItems: "center",
-    width: "100%",
-    marginTop: 2,
-    marginBottom: 5,
-  },
-  buttonText: {
-    color: COLORS.PRIMARY_TEXT,
-    fontSize: FONT_SIZES.button,
     fontFamily: FONTS.DEFAULT,
   },
   signupRow: {
