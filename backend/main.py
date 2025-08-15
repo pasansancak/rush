@@ -1,14 +1,17 @@
-from fastapi import FastAPI
 from dotenv import load_dotenv
-from core.database import Base, engine
 
-import models  # <-- models/__init__.py tüm sınıfları import ediyor
+from fastapi import FastAPI
+from core.database import Base, engine
+from fastapi.staticfiles import StaticFiles
+
+import models
 
 from api.authGoogle import router as google_auth_router
 from api.authApple import router as apple_auth_router
 from api.userFetch import router as user_router
 from api.authEmail import router as auth_email_router
 from api.registerEmail import router as register_email_router
+from api.cardFetchHome import router as home_router
 
 load_dotenv()
 
@@ -18,6 +21,12 @@ app.include_router(google_auth_router)
 app.include_router(apple_auth_router)
 app.include_router(register_email_router)
 app.include_router(auth_email_router)
+app.include_router(home_router)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/cdn", StaticFiles(directory="static"), name="cdn")
+
+
 
 @app.get("/")
 def read_root():
